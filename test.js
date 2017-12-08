@@ -2,7 +2,8 @@ const log = require('./index.js')
 
 log.options({
     "clientId": "388486349667172355",
-    "clientSecret": "JEOqaSmfVjRSrRm73mQ3sBaYHklsYVHt"
+    "clientSecret": "",
+    "redirectUri": ""
 });
 
 log.access(['144645791145918464', "145723964767862785"]);
