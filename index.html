@@ -150,6 +150,7 @@
 
                 // Handle getUri which is the oauth2 url
                 socket.on("getUri", function (url) {
+                    console.log(url);
                     window.location.replace(url);
                 });
 

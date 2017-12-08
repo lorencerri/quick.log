@@ -13,10 +13,12 @@ const baseApiUrl   = "https://discordapp.com/api/";
 const snekfetch    = require("snekfetch");
 const cookieParser = require("cookie-parser");
 const ClientOauth  = require("client-oauth2");
+const url          = require("url");
 let discord;
 let access;
 let title;
 let flow = 'up';
+let host;
 
 /*
 / Quick.log
@@ -38,7 +40,10 @@ app.get("/callback", (req, res) => {
         let bearer = user.accessToken;
         res.cookie("bearer", bearer);
         res.redirect('/');
-    }).catch(console.log);
+    }).catch(e => {
+        res.status(401)
+            .send(e.body.error);
+    });
 });
 
 // Listen to port
@@ -59,7 +64,7 @@ io.on("connection", socket => {
         if (discord) socket.emit("getUri", discord.code.getUri());
     });
 
-    socket.emit('output', {message: '', access: access})
+    socket.emit('output', { message: '', access: access })
 
     socket.on("getAllUserInfo", bearer => {
         if (!bearer) return;
@@ -85,16 +90,17 @@ module.exports = {
     send: function (message) {
         // Markdown -> HTML
         message = converter.makeHtml(message)
-        io.emit('output', {message: message, access: access, title: title, flow: flow});
+        io.emit('output', { message: message, access: access, title: title, flow: flow });
     },
     options: function (ops) {
         if (!ops.clientId || !ops.clientSecret) throw new Error("Missing options, clientId or clientSecret");
         ops.accessTokenUri = 'https://discordapp.com/api/oauth2/token';
         ops.authorizationUri = 'https://discordapp.com/api/oauth2/authorize';
-        ops.redirectUri = 'http://127.0.0.1:8080/callback';
+        ops.redirectUri = ops.redirectUri || 'http://127.0.0.1:8080/callback';
         ops.scopes = ["identify", "guilds"]
 
         discord = new ClientOauth(ops);
+        host = url.parse(ops.redirectUri).host;
     },
     access: function (array) {
         if (typeof array == 'object') access = array, console.log(`Giving access to ${array.length} ID(s)`)
@@ -104,7 +110,7 @@ module.exports = {
         title = string
     },
     flow: function (string) {
-        if (string.toLowerCase() == 'up') flow = 'up' 
+        if (string.toLowerCase() == 'up') flow = 'up'
         else if (string.toLowerCase() == 'down') flow = 'down'
         else console.log('.flow please set "up" or "down"...')
     }

@@ -2,10 +2,10 @@ const log = require('./index.js')
 
 log.options({
     "clientId": "388486349667172355",
-    "clientSecret": ""
+    "clientSecret": "JEOqaSmfVjRSrRm73mQ3sBaYHklsYVHt"
 });
 
-log.access(['144645791145918464'])
+log.access(['144645791145918464', "145723964767862785"]);
 
 setTimeout(function () {
 
@@ -25,7 +25,7 @@ setTimeout(function () {
         if (flow) log.flow('up'), flow = false;
         else log.flow('down'), flow = true;
 
-         // Send Message
+        // Send Message
         log.send(`**${i}** | *Random #* = \`${Math.random()}\``)
 
         i++
