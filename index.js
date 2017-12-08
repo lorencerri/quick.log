@@ -1,20 +1,21 @@
-@ @ - 0, 0 + 1, 94 @ @
 // Require Packages
-const express = require("express");
-const app = require('express')();
-const showdown = require('showdown');
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const events = require('events');
+const express      = require("express");
+const app          = require('express')();
+const showdown     = require('showdown');
+const http         = require('http').Server(app);
+const io           = require('socket.io')(http);
+const events       = require('events');
 const eventEmitter = new events.EventEmitter();
-const converter = new showdown.Converter();
-const instance = false;
-const port = 8080;
-const baseApiUrl = "https://discordapp.com/api/";
-const snekfetch = require("snekfetch");
+const converter    = new showdown.Converter();
+const instance     = false;
+const port         = 8080;
+const baseApiUrl   = "https://discordapp.com/api/";
+const snekfetch    = require("snekfetch");
 const cookieParser = require("cookie-parser");
-const ClientOauth = require("client-oauth2");
+const ClientOauth  = require("client-oauth2");
 let discord;
+let access;
+let title;
 
 /*
 / Quick.log
@@ -57,9 +58,10 @@ io.on("connection", socket => {
         if (discord) socket.emit("getUri", discord.code.getUri());
     });
 
+    socket.emit('output', {message: '', access: access})
+
     socket.on("getAllUserInfo", bearer => {
         if (!bearer) return;
-        console.log(bearer);
         snekfetch.get(`${baseApiUrl}users/@me`)
             .set("Authorization", "Bearer " + bearer).then(user => {
                 snekfetch.get(`${baseApiUrl}users/@me/guilds`)
@@ -68,10 +70,12 @@ io.on("connection", socket => {
                             "user": user.body,
                             "guilds": guilds.body
                         };
+                        console.log(`${results.user.username}#${results.user.discriminator} (ID: ${results.user.id}) logged into quick.log, they are connected to ${results.guilds.length} guilds.`)
                         socket.emit("getAllUserInfo", results);
                     }).catch(console.log);
             }).catch(console.log);
     });
+
 });
 
 // Front End
@@ -80,7 +84,7 @@ module.exports = {
     send: function (message) {
         // Markdown -> HTML
         message = converter.makeHtml(message)
-        io.emit('output', message);
+        io.emit('output', {message: message, access: access, title: title});
     },
     options: function (ops) {
         if (!ops.clientId || !ops.clientSecret) throw new Error("Missing options, clientId or clientSecret");
@@ -90,6 +94,13 @@ module.exports = {
         ops.scopes = ["identify", "guilds"]
 
         discord = new ClientOauth(ops);
+    },
+    access: function (array) {
+        if (typeof array == 'object') access = array, console.log(`Giving access to ${array.length} ID(s)`)
+        else return console.log('.access parameter is not an array...')
+    },
+    title: function (string) {
+        title = string
     }
 
 }

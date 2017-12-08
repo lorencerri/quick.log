@@ -2,8 +2,10 @@ const log = require('./index.js')
 
 log.options({
     "clientId": "388486349667172355",
-    "clientSecret": "client Secret Here"
+    "clientSecret": ""
 });
+
+log.access(['144645791145918464'])
 
 setTimeout(function () {
 
@@ -15,9 +17,12 @@ setTimeout(function () {
     let i = 0
 
     let func = setInterval(function () {
+        var d = new Date();
+        // Change Title
+        log.title(`Last log: ${d.getHours()}:${d.getMinutes()}.${d.getMilliseconds()}`)
 
-        // Send Message
-        //log.send(`**${i}** | *Random #* = \`${Math.random()}\``)
+         // Send Message
+        log.send(`**${i}** | *Random #* = \`${Math.random()}\``)
 
         i++
     }, 500)
