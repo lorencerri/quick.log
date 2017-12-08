@@ -169,13 +169,15 @@
                         // Deploy Message
                         var message = $(data.message)
                         console.log(message)
-                        messages.insertBefore(message.get(0), messages.firstChild);
+                        if (data.flow == 'up') messages.insertBefore(message.get(0), messages.firstChild);
+                        else messages.insertBefore(message.get(0), messages.nextElementSibling);
                         logTitle.innerText = data.title || 'Logs'
                     } else if (data.message.length && userinfo && data.access.includes(userinfo.user.id)) {
                         // Deploy Message
                         var message = $(data.message)
                         console.log(message)
-                        messages.insertBefore(message.get(0), messages.firstChild);
+                        if (data.flow == 'up') messages.insertBefore(message.get(0), messages.firstChild);
+                        else messages.insertBefore(message.get(0), messages.nextElementSibling);
                         logTitle.innerText = data.title || 'Logs'
                     } else {
                         if (!userinfo) {

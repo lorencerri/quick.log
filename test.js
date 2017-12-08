@@ -15,16 +15,21 @@ setTimeout(function () {
 
     // Counter
     let i = 0
-
+    let flow = true;
     let func = setInterval(function () {
         var d = new Date();
         // Change Title
         log.title(`Last log: ${d.getHours()}:${d.getMinutes()}.${d.getMilliseconds()}`)
+
+        // This right here switches the flow every time a message is sent
+        if (flow) log.flow('up'), flow = false;
+        else log.flow('down'), flow = true;
 
          // Send Message
         log.send(`**${i}** | *Random #* = \`${Math.random()}\``)
 
         i++
     }, 500)
+
 
 }, 1500)

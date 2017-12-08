@@ -16,6 +16,7 @@ const ClientOauth  = require("client-oauth2");
 let discord;
 let access;
 let title;
+let flow = 'up';
 
 /*
 / Quick.log
@@ -84,7 +85,7 @@ module.exports = {
     send: function (message) {
         // Markdown -> HTML
         message = converter.makeHtml(message)
-        io.emit('output', {message: message, access: access, title: title});
+        io.emit('output', {message: message, access: access, title: title, flow: flow});
     },
     options: function (ops) {
         if (!ops.clientId || !ops.clientSecret) throw new Error("Missing options, clientId or clientSecret");
@@ -101,6 +102,11 @@ module.exports = {
     },
     title: function (string) {
         title = string
+    },
+    flow: function (string) {
+        if (string.toLowerCase() == 'up') flow = 'up' 
+        else if (string.toLowerCase() == 'down') flow = 'down'
+        else console.log('.flow please set "up" or "down"...')
     }
 
 }
