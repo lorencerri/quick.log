@@ -1,6 +1,6 @@
 
 
-Quick.log
+Quick.log-discord
 ========
 
 
@@ -20,12 +20,12 @@ You can view our Trello roadmap [here](https://trello.com/b/rRZ6i1Qh)!
 
 **Installation**
 ```
-npm install quick.log
+npm install quick.log-discord
 ```
 
 **Require Package**
 ```
-var log = require('quick.log')
+var log = require('quick.log-discord')
 ```
 
 **Webpage Viewable**
