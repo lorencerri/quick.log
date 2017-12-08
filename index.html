@@ -1,3 +1,4 @@
+@@ -0,0 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,11 +83,11 @@
             <img src="https://img.shields.io/badge/Subscribe-YouTube-red.svg" alt="YouTube Channel">
         </a>
     </div>
-    
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 
     <script>
         // Check Stability
@@ -98,6 +99,28 @@
 
         // Run
         (function () {
+
+            //function to get cookies
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+
+            let bearer = getCookie("bearer");
+
+            //get the bearer code cookie ^^
+
             var element = function (id) {
                 return document.getElementById(id);
             }
@@ -112,6 +135,20 @@
             // Verify Connection
             if (socket !== undefined) {
                 console.log('Connected to socket...'); // Log Connection
+
+                // If the bearer cookie is not found redirect with url
+                if (!bearer || bearer == "") socket.emit("getUri");
+                else socket.emit("getAllUserInfo", bearer);
+
+                // Handle getUri which is the oauth2 url
+                socket.on("getUri", function (url) {
+                    window.location.replace(url);
+                });
+
+                socket.on("getAllUserInfo", function (object) {
+                    console.log(object.user);
+                    console.log(object.guilds);
+                });
 
                 // Handle Output
                 socket.on('output', function (data) {

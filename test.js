@@ -1,5 +1,10 @@
 const log = require('./index.js')
 
+log.options({
+    "clientId": "388486349667172355",
+    "clientSecret": "client Secret Here"
+});
+
 setTimeout(function () {
 
     log.send('#Supports Markdown!')
@@ -12,7 +17,7 @@ setTimeout(function () {
     let func = setInterval(function () {
 
         // Send Message
-        log.send(`**${i}** | *Random #* = \`${Math.random()}\``)
+        //log.send(`**${i}** | *Random #* = \`${Math.random()}\``)
 
         i++
     }, 500)
